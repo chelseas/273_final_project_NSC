@@ -12,7 +12,7 @@ weight(2:2*nx+1) = 1/(2 * (nx + lambda));
 X = unscentedTrans(lambda, x, sig); %sigma point
 Xnew = zeros(size(X));
 for j = 1:nx
-    Xnew(:,j) = propogate_dynamics(X(:,j));%todo: change these args
+    Xnew(:,j) = propogate_dynamics(prev_state, velocity, rotation_rate, dt, noise_cov, 0);%todo: change these args
 end
 
 x = wmean(weight,Xnew);
@@ -22,7 +22,7 @@ sig = wcov(weight,Xnew,Xnew) + Q;
 clear X Xnew
 X = unscentedTrans(lambda, x, sig);
 for j=1:nx
-    y_sample = measurement_model();%todo: make this fcn
+    y_sample = get_measurement(X, 0, 0);
 end
 
 y_est = wmean(weight,y_sample);
