@@ -2,11 +2,34 @@
 
 % get estimates
 
-function [state, cov] = get_estimate(x, y, z)
+function [x, sig] = get_estimate(x, sig,y,w)
+lambda = 2;
+nx = size(x,1);
+weight(1) = lambda/(nx + lambda);
+weight(2:2*nx+1) = 1/(2 * (nx + lambda));
 
+%PREDICT
 X = unscentedTrans(lambda, x, sig); %sigma point
-for j = 1:size(X,2)
+Xnew = zeros(size(X));
+for j = 1:nx
     Xnew(:,j) = propogate_dynamics(X(:,j));%todo: change these args
 end
+
+x = wmean(weight,Xnew);
+sig = wcov(weight,Xnew,Xnew) + Q;
+
+%UPDATE
+clear X Xnew
+X = unscentedTrans(lambda, x, sig);
+for j=1:nx
+    y_sample = measurement_model();%todo: make this fcn
+end
+
+y_est = wmean(weight,y_sample);
+cov_yy = wcov(weight,y_sample,y_sample)+R;
+cov_xy = wcov(weight,X,y_sample);
+
+x = x + (cov_xy\(cov_yy))*(y-y_est);
+sig = sig - (cov_xy\cov_yy)*cov_xy';
 
 end
