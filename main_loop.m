@@ -10,7 +10,7 @@
 % for each timestep 
 
     % propogate dynamics
-    [next_state] = propogate_dynamics(stuff);
+    [next_state] = propogate_dynamics(prev_state, velocity, rotation_rate, dt);
     
     % measure + estimate state
     [state, cov] = get_estimate(x, y, z);
