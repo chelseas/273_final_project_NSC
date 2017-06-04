@@ -22,12 +22,12 @@ sigma = zeros(3,3,length(time)); % the covariance
 
 %test control
 velocity = ones(1,length(time));
-rotation_rate = sin(time);
+rotation_rate = zeros(1,length(time));
 
 % initial filter state + real state
-x(:,1) = [0,0,0];
-mu(:,1) = [0,0,0];
-sigma(:,:,1) = eye(3); % very uncertain start state
+x(:,1) = [0,1,0.2];
+mu(:,1) = [0,1,0.2];
+sigma(:,:,1) = 1e5*ones(3,3); % very uncertain start state
 
 % noise parameters
 meas_noise_cov = 0.01; % R
@@ -45,12 +45,12 @@ for t = 1:length(time)-1
     % measure + estimate state
     add_meas_noise = true;
     measurement = get_measurement(x(:,t), meas_noise_cov, add_meas_noise);
-    [state, cov] = get_estimate(mu(:,t), sigma(:,:,t), measurement, velocity(:,t), rotation_rate(:,t), dt, process_noise_cov, meas_noise_cov);
+    [state, cov] = get_estimate(mu(:,t), sigma(:,:,t), measurement, velocity(t), rotation_rate(t), dt, process_noise_cov, meas_noise_cov);
     
     
     % do active control
     finite_horizon = false;
-    [control] = get_control(state, cov, measurement, [velocity(t), rotation_rate(t)], finite_horizon);   
+    [control] = get_control(state, cov, measurement, [velocity(t), rotation_rate(t)], finite_horizon, dt, process_noise_cov, meas_noise_cov);   
     velocity(t+1) = control(1); rotation_rate(t+1) = control(2);
     mu(:,t+1) = state;
     sigma(:,:,t+1) = cov;

@@ -13,7 +13,6 @@ end
         vel = u(1); rot_rt = u(2);
         [mu, sigma] = get_estimate(x,sig,y,vel,rot_rt, dt, Q, R);
         %objective = log(det(sigma));
-        %objective = max(eig(sigma));
-        objective = trace(sigma);
+        objective = max(eig(sigma);
     end
 end
