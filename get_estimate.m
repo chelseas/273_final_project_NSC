@@ -2,7 +2,7 @@
 
 % get estimates
 
-function [x, sig] = get_estimate(x, sig, y, velocity, rotation_rate)
+function [x, sig] = get_estimate(x, sig, y, velocity, rotation_rate, dt)
 lambda = 2;
 nx = size(x,1);
 weight(1) = lambda/(nx + lambda);
@@ -11,8 +11,9 @@ weight(2:2*nx+1) = 1/(2 * (nx + lambda));
 %PREDICT
 X = unscentedTrans(lambda, x, sig); %sigma point
 Xnew = zeros(size(X));
+Q = 0;
 for j = 1:nx
-    Xnew(:,j) = propogate_dynamics(prev_state, velocity, rotation_rate, dt, noise_cov, 0);%todo: change these args
+    Xnew(:,j) = propogate_dynamics(X(:,j), velocity, rotation_rate, dt, Q, 0);%todo: change these args
 end
 
 x = wmean(weight,Xnew);

@@ -36,16 +36,16 @@ process_noise_cov = 0.01*diag(ones(3,1));
 % main simulation loop
 
 % for each timestep 
-for t = length(time)-1
+for t = 1:length(time)-1
 
     % propogate dynamics
     add_proc_noise = true;
-    x(:,t+1) = propogate_dynamics(x(:,t), velocity(:,t), rotation_rate(:,t), dt, process_noise_cov, add_proc_noise);
+    x(:,t+1) = propogate_dynamics(x(:,t), velocity(t), rotation_rate(t), dt, process_noise_cov, add_proc_noise);
     
     % measure + estimate state
     add_meas_noise = true;
     measurement = get_measurement(x(:,t), meas_noise_cov, add_meas_noise);
-    [state, cov] = get_estimate(mu(:,t), sigma(:,:,t), measurement, velocity(:,t), rotation_rate(:,t));
+    [state, cov] = get_estimate(mu(:,t), sigma(:,:,t), measurement, velocity(:,t), rotation_rate(:,t), dt);
     
     
     % do active control

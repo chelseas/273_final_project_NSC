@@ -8,6 +8,6 @@ function [next_state] = propogate_dynamics(prev_state, velocity, rotation_rate, 
                                   rotation_rate];
     if add_noise
         wt = mvnrnd([0;0;0],noise_cov);
-        next_state = next_state + wt;
+        next_state = next_state + wt';
     end                         
 end
