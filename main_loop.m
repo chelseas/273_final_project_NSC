@@ -6,7 +6,7 @@
 % control: [velocity, rotation_rate]
 % filter used: UKF
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
+clear all; close all;
 % init sim parameters
 t_max = 20;
 dt = 0.001;
@@ -36,7 +36,7 @@ process_noise_cov = 0.01*diag(ones(3,1));
 % main simulation loop
 
 % for each timestep 
-for t = time(1:end-1)
+for t = length(time)-1
 
     % propogate dynamics
     add_proc_noise = true;
@@ -47,10 +47,9 @@ for t = time(1:end-1)
     measurement = get_measurement(x(:,t), meas_noise_cov, add_meas_noise);
     [state, cov] = get_estimate(mu(:,t), sigma(:,:,t), measurement, velocity(:,t), rotation_rate(:,t));
     
+    
     % do active control
-    %[control] = get_control(a,b,c);
-
-% end for
+    %[control] = get_control(state, cov, measurement, [velocity(t), rotation_rate(t)], finite_horizon);   
+    %velocity(t+1) = control(1); rotation_rate(t+1) = control(2);
+ 
 end
-
-% plot stuff (call plot stuff function)
