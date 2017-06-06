@@ -23,7 +23,7 @@ sig = wcov(weight,Xnew,Xnew) + Q;
 clear X Xnew
 X = unscentedTrans(lambda, x, sig);
 for j=1:size(X,2)
-    y_sample(j) = get_measurement(X(:,j), R, 0);
+    y_sample(:,j) = get_measurement(X(:,j), R, 0);
 end
 
 y_est = wmean(weight,y_sample);

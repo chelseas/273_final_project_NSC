@@ -3,13 +3,18 @@
 % plot path of robot
 
 figure();
-plot(x(1,:), x(2,:)); hold on;
+h1 = plot(x(1,:), x(2,:)); hold on;
 title('Path of robot');
-plot(mu(1,:), mu(2,:), '--');
-%ellipse_pts = get_error_ellipse(mu,sigma);
+h2 = plot(mu(1,:), mu(2,:), '--');
+%ellipse_pts = get_error_ellipse(mu(1:2,:),sigma(1:2,1:2,:));
 %for i = 1:length(time)
- %   plot(ellipse_pts(1,:,i), ellipse_pts(2,:,i), 'k--');
+%    plot(ellipse_pts(1,:,i), ellipse_pts(2,:,i), 'k--');
 %end
-legend('True','Estimate');
 xlabel('x');
 ylabel('y');
+
+for i = 4:2:87
+    h3 = plot(x(i,:), x(i+1,:), 'x');
+end
+legend([h1,h2,h3],'True','Estimate','Features');
+
