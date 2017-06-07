@@ -8,7 +8,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 clear all; close all;
 % init sim parameters
-t_max = 20;
+t_max = 60;
 dt = 0.01;
 time = 0:dt:t_max;
 
@@ -25,11 +25,11 @@ mu = zeros(state_dim,length(time)); % the estimated state
 mindists = zeros(num_feats);
 
 %test control
-velocity = 0.1*ones(1,length(time));
-rotation_rate = zeros(1,length(time));
+%velocity = 0.1*ones(1,length(time));
+%rotation_rate = zeros(1,length(time));
 
 %niveta control
-velocity = ones(1,length(time));
+velocity = 5*ones(1,length(time));
 rotation_rate = sin(time);
 
 
@@ -39,10 +39,12 @@ x(1:3,1) = [2,3,0];
 x(4:end,1) = feats;
 
 mu(1:3,1) = [2,3,0];
-%mu(4:end,1) = x(4:end,1)+ (rand()-0.5);
+%mu(4:end,1) = x(4:end,1)+ (rand()-0.5);.
 mu(4:end,1) = x(4:end,1);
 %sigma(:,:,1) = 2*ones(state_dim,state_dim); % very uncertain start state
 sigma(:,:,1) = 2*eye(state_dim);
+
+objective_log = zeros(1, length(time));
 
 % noise parameters
 meas_noise_cov = 0.01*eye(5); % R
@@ -51,6 +53,7 @@ process_noise_cov(1:3,1:3) = 0.1*eye(3)*dt^2;
 
 % main simulation loop
 handle_1 = figure();
+active_control = true;
 % for each timestep 
 for t = 1:length(time)-1
 
@@ -66,13 +69,20 @@ for t = 1:length(time)-1
     mindists = get_min_distances(measurement, mindists);
     
     % do active control
-    finite_horizon = false;
-    [control] = get_control(state, cov, measurement, [velocity(t), rotation_rate(t)], finite_horizon, dt, process_noise_cov, meas_noise_cov,state_dim);
-    velocity(t+1) = control(1); rotation_rate(t+1) = control(2);
+    if active_control
+        finite_horizon = false;
+        [control, objective_val] = get_control(state, cov, measurement, [velocity(t), rotation_rate(t)], finite_horizon, dt, process_noise_cov, meas_noise_cov,state_dim);
+        velocity(t+1) = control(1) + velocity(t+1); rotation_rate(t+1) = control(2) + rotation_rate(t+1);
+        objective_log(t) = objective_val;
+    else
+        u = baseline_control(dt, t, t_max, time, state(1:2));
+        velocity(t+1) = u(1);
+        control(t+1) = u(2);
+    end
     mu(:,t+1) = state;
     sigma(:,:,t+1) = cov;
-    plot_stuff()
-    pause(dt)
+    %plot_stuff()
+    %pause(.0001)
 end
-
+plot_stuff()
 plot_stuff_static()
