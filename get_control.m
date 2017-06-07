@@ -17,12 +17,12 @@ end
         [mu, sigma] = get_estimate(x,sig,y,vel,rot_rt, dt, Q, R);
         measurement = get_measurement(mu, R, add_meas_noise);
         mindists = get_min_distances(measurement, mindists);
-        objective = 0;
-        %objective = objective + log(det(sigma));
-        %objective = objective + max(eig(sigma));
-        objective = objective + trace(sigma);
-        %objective = objective + log(det(5*sigma(1:3,1:3)) + det(sigma(4:end,4:end)));
-        %objective = objective + norm(mu(1:2)-mu(5:6));
-        %objective = objective + sum(mindists);
+        %objective = log(det(sigma));
+        %objective = max(eig(sigma));
+        %objective = trace(sigma);
+
+        %objective = log(det(5*sigma(1:3,1:3)) + det(sigma(4:end,4:end)));
+        %objective = sqrt((mu(4)-mu(1))^2 + (mu(5)-mu(2))^2);
+        objective = sum(mindists);
     end
 end

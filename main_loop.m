@@ -8,7 +8,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 clear all; close all;
 % init sim parameters
-t_max = 20;
+t_max = 10;
 dt = 0.01;
 time = 0:dt:t_max;
 
@@ -87,8 +87,8 @@ for t = 1:length(time)-1
     
     mu(:,t+1) = state;
     sigma(:,:,t+1) = cov;
-    %plot_stuff()
-    %pause(.0001)
+    plot_stuff();
+    %pause(dt);
 end
-plot_stuff()
-plot_stuff_static()
+%plot_stuff_static()
+
