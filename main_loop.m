@@ -24,6 +24,7 @@ mu = zeros(state_dim,length(time)); % the estimated state
 % rotation_rate = zeros(1,length(time)); % rotation control
 mindists = 1e4*ones(num_feats);
 
+
 %test control
 velocity = 0.1*ones(1,length(time));
 rotation_rate = zeros(1,length(time));
@@ -62,13 +63,14 @@ for t = 1:length(time)-1
     add_meas_noise = true;
     measurement = get_measurement(x(:,t), meas_noise_cov, add_meas_noise, state_dim);
     
-    [state, cov] = get_estimate(mu(:,t), sigma(:,:,t), measurement, velocity(t), rotation_rate(t), dt, process_noise_cov, meas_noise_cov);
+    [state, cov] = get_estimate(mu(:,t), sigma(:,:,t), measurement, velocity(t), rotation_rate(t), dt, process_noise_cov, meas_noise_cov,state_dim);
     mindists = get_min_distances(measurement, mindists);
     
     % do active control
-    %finite_horizon = false;
+    finite_horizon = false;
     [control] = get_control(state, cov, measurement, [velocity(t), rotation_rate(t)], finite_horizon, dt, process_noise_cov,...
         meas_noise_cov, meas_noise_cov, add_meas_noise, state_dim, mindists);        
+
     velocity(t+1) = control(1); rotation_rate(t+1) = control(2);
     mu(:,t+1) = state;
     sigma(:,:,t+1) = cov;

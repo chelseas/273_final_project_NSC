@@ -1,12 +1,11 @@
 % active control piece
-
 function [u_best] = get_control(x, sig, y, u,finite_horizon, dt, Q, R, ...
     meas_noise_cov, add_meas_noise, state_dim, mindists)
 
 if ~finite_horizon
     objective = @objective_function;
     %One step horizon
-    options = optimset('MaxFunEvals',10, 'Display', 'iter', 'TolX', 1e-2, 'TolF', 1e-1);
+    options = optimset('MaxFunEvals',50, 'Display', 'iter', 'TolX', 1e-2, 'TolF', 1e-1);
     u_best = fminsearch(objective, u, options);
     % saturate
     u_best(1) = max( min( u_best(1), 10), -10); % linear velocity
@@ -18,9 +17,8 @@ end
         measurement = get_measurement(x, meas_noise_cov, add_meas_noise, state_dim);
         [mu, sigma] = get_estimate(x,sig,y,vel,rot_rt, dt, Q, R);
         mindists = get_min_distances(measurement, mindists);
-
         %objective = log(det(sigma));
-        %objective = max(eig(sigma));
+        objective = max(eig(sigma));
         %objective = trace(sigma);
         objective = log(det(5*sigma(1:3,1:3)) + det(sigma(4:end,4:end))) + sum(mindists);
     end

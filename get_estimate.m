@@ -2,7 +2,7 @@
 
 % get estimates
 
-function [x, sig] = get_estimate(x, sig, y, velocity, rotation_rate, dt, Q, R)
+function [x, sig] = get_estimate(x, sig, y, velocity, rotation_rate, dt, Q, R,state_dim)
 lambda = 2;
 nx = size(x,1);
 weight(1) = lambda/(nx + lambda);
