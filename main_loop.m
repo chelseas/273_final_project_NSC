@@ -8,7 +8,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 clear all; close all;
 % init sim parameters
-t_max = 10;
+t_max = 20;
 dt = 0.01;
 time = 0:dt:t_max;
 
@@ -51,6 +51,8 @@ objective_log = zeros(1, length(time));
 meas_noise_cov = 0.01*eye(num_feats); % R
 process_noise_cov = zeros(state_dim); % Q
 process_noise_cov(1:3,1:3) = 0.1*eye(3)*dt^2;
+
+rng('default');
 
 % main simulation loop
 handle_1 = figure();
