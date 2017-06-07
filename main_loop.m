@@ -8,7 +8,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 clear all; close all;
 % init sim parameters
-t_max = 20;
+t_max = 200;
 dt = 0.01;
 time = 0:dt:t_max;
 
@@ -25,8 +25,8 @@ mu = zeros(state_dim,length(time)); % the estimated state
 mindists = zeros(num_feats);
 
 %test control
-velocity = 0.1*ones(1,length(time));
-rotation_rate = zeros(1,length(time));
+%velocity = 0.1*ones(1,length(time));
+%rotation_rate = zeros(1,length(time));
 
 %niveta control
 velocity = ones(1,length(time));
