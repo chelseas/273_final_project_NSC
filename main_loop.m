@@ -19,7 +19,7 @@ num_feats = length(feats)/2;
 state_dim = 3 + (num_feats*2); 
 x = zeros(state_dim,length(time)); % the state
 mu = zeros(state_dim,length(time)); % the estimated state
-sigma = zeros(state_dim,state_dim,length(time)); % the covariance
+%sigma = zeros(state_dim,state_dim,length(time)); % the covariance
 % velocity = zeros(1,length(time)); % velocity control
 % rotation_rate = zeros(1,length(time)); % rotation control
 minddists = zeros(num_feats);
@@ -28,19 +28,26 @@ minddists = zeros(num_feats);
 velocity = 0.1*ones(1,length(time));
 rotation_rate = zeros(1,length(time));
 
+%niveta control
+velocity = ones(1,length(time));
+rotation_rate = sin(time);
+
+
 % initial filter state + real state
 x(1:3,1) = [2,3,0];
 %x and y coordinates of map features
 x(4:end,1) = feats;
 
 mu(1:3,1) = [2,3,0];
-mu(4:end,1) = x(4:end,1)+ (rand()-0.5);
-sigma(:,:,1) = 2*ones(state_dim,state_dim); % very uncertain start state
+%mu(4:end,1) = x(4:end,1)+ (rand()-0.5);
+mu(4:end,1) = x(4:end,1);
+%sigma(:,:,1) = 2*ones(state_dim,state_dim); % very uncertain start state
+sigma(:,:,1) = 2*eye(state_dim);
 
 % noise parameters
-meas_noise_cov = 0.01; % R
-process_noise_cov = zeros(state_dim,state_dim);
-process_noise_cov(1:3,1:3) = 0.1*diag(ones(3,1))*dt^2;
+meas_noise_cov = 0.01*eye(4); % R
+process_noise_cov = zeros(state_dim);
+process_noise_cov(1:3,1:3) = 0.1*eye(3)*dt^2;
 
 % main simulation loop
 handle_1 = figure();
@@ -59,8 +66,8 @@ for t = 1:length(time)-1
     mindists = get_min_distances(measurement, mindists);
     
     % do active control
-    finite_horizon = false;
-    [control] = get_control(state, cov, measurement, [velocity(t), rotation_rate(t)], finite_horizon, dt, process_noise_cov, meas_noise_cov);        velocity(t+1) = control(1); rotation_rate(t+1) = control(2);
+    %finite_horizon = false;
+    %[control] = get_control(state, cov, measurement, [velocity(t), rotation_rate(t)], finite_horizon, dt, process_noise_cov, meas_noise_cov);        velocity(t+1) = control(1); rotation_rate(t+1) = control(2);
     mu(:,t+1) = state;
     sigma(:,:,t+1) = cov;
     plot_stuff()
