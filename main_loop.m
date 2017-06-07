@@ -22,7 +22,7 @@ mu = zeros(state_dim,length(time)); % the estimated state
 %sigma = zeros(state_dim,state_dim,length(time)); % the covariance
 % velocity = zeros(1,length(time)); % velocity control
 % rotation_rate = zeros(1,length(time)); % rotation control
-mindists = 1e4*ones(num_feats);
+mindists = 1e4*ones(num_feats,1);
 
 
 %test control
