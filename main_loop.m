@@ -56,7 +56,7 @@ rng('default');
 
 % main simulation loop
 handle_1 = figure();
-active_control = true;
+active_control = false;
 % for each timestep 
 for t = 1:length(time)-1
 
