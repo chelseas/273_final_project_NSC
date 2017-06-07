@@ -1,7 +1,7 @@
 % dynamics function
 % unicycle robot model
 % state is [x_position, y_position, orientation]'
-function [next_state] = propogate_dynamics(prev_state, velocity, rotation_rate, dt, noise_cov, add_noise)
+function [next_state] = propogate_dynamics(prev_state, velocity, rotation_rate, dt, noise_cov, add_noise, num_feats)
     next_state = prev_state; %for shape purposes
     theta_t = prev_state(3);
     next_state(1:3) = prev_state(1:3) + dt*[velocity*cos(theta_t);...
@@ -9,7 +9,7 @@ function [next_state] = propogate_dynamics(prev_state, velocity, rotation_rate, 
                                   rotation_rate];
     next_state(4:end) = prev_state(4:end);
     if add_noise
-        wt = mvnrnd(zeros(3+4*2,1),noise_cov);
+        wt = mvnrnd(zeros(3+num_feats*2,1),noise_cov);
         next_state = next_state + wt';
     end                         
 end
