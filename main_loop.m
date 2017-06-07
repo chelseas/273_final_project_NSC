@@ -13,6 +13,7 @@ dt = 0.01;
 time = 0:dt:t_max;
 
 % init containers
+load('features5.mat') % loads 5 feature points into variable feats
 state_dim = 3; 
 x = zeros(3,length(time)); % the state
 mu = zeros(3,length(time)); % the estimated state
