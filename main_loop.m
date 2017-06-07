@@ -49,7 +49,7 @@ objective_log = zeros(1, length(time));
 
 % noise parameters
 meas_noise_cov = 0.01*eye(num_feats); % R
-process_noise_cov = zeros(state_dim);
+process_noise_cov = zeros(state_dim); % Q
 process_noise_cov(1:3,1:3) = 0.1*eye(3)*dt^2;
 
 % main simulation loop
@@ -72,6 +72,7 @@ for t = 1:length(time)-1
     % do active control
     if active_control
         finite_horizon = false;
+        add_meas_noise = false;
         [control, objective_val] = get_control(state, cov, measurement, [velocity(t), rotation_rate(t)], finite_horizon, dt, process_noise_cov,...
             meas_noise_cov, add_meas_noise, mindists);
         velocity(t+1) = control(1) + velocity(t+1); rotation_rate(t+1) = control(2) + rotation_rate(t+1);
