@@ -2,6 +2,7 @@
 function [u_best] = get_control(x, sig, y, u,finite_horizon, dt, Q, R, ...
     meas_noise_cov, add_meas_noise, mindists)
 
+
 if ~finite_horizon
     objective = @objective_function;
     %One step horizon
@@ -11,6 +12,7 @@ if ~finite_horizon
     u_best(1) = max( min( u_best(1), 10), -10); % linear velocity
     u_best(2) = max( min( u_best(2), .2), -0.2); % angular velocity
 end
+
 
     function [objective] = objective_function(u)
         vel = u(1); rot_rt = u(2);
