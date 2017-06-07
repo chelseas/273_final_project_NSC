@@ -6,7 +6,7 @@ function measurement = get_measurement(state, meas_noise_cov, add_noise)
     j = 1;
     for i = 4:2:87
         % range measurements to features
-        measurement(j) = norm(state(i:i+1));
+        measurement(j) = norm(state(i:i+1)-state(1:2));
         j = j+1;
     end
     
