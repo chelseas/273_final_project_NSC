@@ -25,7 +25,7 @@ end
 
         %objective = log(det(5*sigma(1:3,1:3)) + det(sigma(4:end,4:end)));
         %objective = sqrt((mu(4)-mu(1))^2 + (mu(5)-mu(2))^2);
-        objective = log(det(5*sigma(1:3,1:3)) + det(sigma(4:end,4:end))) + sum(mindists);
+        objective = sum(mindists);
 
     end
 end
