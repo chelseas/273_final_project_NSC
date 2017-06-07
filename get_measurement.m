@@ -1,9 +1,9 @@
 % measurement model
 % measurement: range
-function measurement = get_measurement(state, meas_noise_cov, add_noise)
+function measurement = get_measurement(state, meas_noise_cov, add_noise, state_dim)
     % written assuming state is [x_position, y_position, theta]
     j = 1;
-    for i = 4:2:87
+    for i = 4:2:state_dim
         % range measurements to features
         measurement(j) = norm(state(i:i+1)-state(1:2));
         j = j+1;
