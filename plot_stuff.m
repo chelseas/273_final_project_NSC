@@ -20,6 +20,16 @@ plot(x(8,1:t), x(9,1:t), 'bx')
 plot(mu(8,1:t), mu(9,1:t), 'bo')
 plot(x(10,1:t), x(11,1:t), 'cx')
 plot(mu(10,1:t), mu(11,1:t), 'co')
+
+%for i = 4:2:13
+%    h3 = plot(mu(i,1:t), mu(i+1,1:t), 'x');
+%    hold on;
+%end
+%legend([h1,h2,h3],'True','Estimate','Features');
+%plot(x(3,1:t), x(4,1:t), 'rx')
+%plot(mu(3,1:t), mu(4,1:t), 'ro')
+%plot(x(5,1:t), x(6,1:t), 'gx')
+%plot(mu(5,1:t), mu(6,1:t), 'go')
 %legend([h1,h2,h3],'True','Estimate','Features');
 
 
