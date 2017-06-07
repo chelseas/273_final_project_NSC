@@ -76,8 +76,9 @@ for t = 1:length(time)-1
     
     
     % do active control
-    %finite_horizon = false;
-    %[control] = get_control(state, cov, measurement, [velocity(t), rotation_rate(t)], finite_horizon, dt, process_noise_cov, meas_noise_cov);        velocity(t+1) = control(1); rotation_rate(t+1) = control(2);
+    finite_horizon = false;
+    [control] = get_control(state, cov, measurement, [velocity(t), rotation_rate(t)], finite_horizon, dt, process_noise_cov, meas_noise_cov);        velocity(t+1) = control(1); rotation_rate(t+1) = control(2);
+    velocity(t+1) = control(1); rotation_rate(t+1) = control(2);
     mu(:,t+1) = state;
     sigma(:,:,t+1) = cov;
     plot_stuff()

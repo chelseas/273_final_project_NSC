@@ -5,7 +5,7 @@ function [u_best] = get_control(x, sig, y, u,finite_horizon, dt, Q, R)
 if ~finite_horizon
     objective = @objective_function;
     %One step horizon
-    options = optimset('MaxFunEvals',10, 'Display', 'iter', 'TolX', 1e-2, 'TolF', 1e-1);
+    options = optimset('MaxFunEvals',50, 'Display', 'iter', 'TolX', 1e-2, 'TolF', 1e-1);
     u_best = fminsearch(objective, u, options);
     % saturate
     u_best(1) = max( min( u_best(1), 10), -10); % linear velocity
