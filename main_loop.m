@@ -57,19 +57,19 @@ for t = 1:length(time)-1
 
     % propogate dynamics
     add_proc_noise = true;
-    x(:,t+1) = propogate_dynamics(x(:,t), velocity(t), rotation_rate(t), dt, process_noise_cov, add_proc_noise,num_feats);
+    x(:,t+1) = propogate_dynamics(x(:,t), velocity(t), rotation_rate(t), dt, process_noise_cov, add_proc_noise);
     
     % measure + estimate state
     add_meas_noise = true;
-    measurement = get_measurement(x(:,t), meas_noise_cov, add_meas_noise, state_dim);
+    measurement = get_measurement(x(:,t), meas_noise_cov, add_meas_noise);
     
-    [state, cov] = get_estimate(mu(:,t), sigma(:,:,t), measurement, velocity(t), rotation_rate(t), dt, process_noise_cov, meas_noise_cov,state_dim);
+    [state, cov] = get_estimate(mu(:,t), sigma(:,:,t), measurement, velocity(t), rotation_rate(t), dt, process_noise_cov, meas_noise_cov);
     mindists = get_min_distances(measurement, mindists);
     
     % do active control
     finite_horizon = false;
     [control] = get_control(state, cov, measurement, [velocity(t), rotation_rate(t)], finite_horizon, dt, process_noise_cov,...
-        meas_noise_cov, meas_noise_cov, add_meas_noise, state_dim, mindists);        
+        meas_noise_cov, meas_noise_cov, add_meas_noise, mindists);        
 
     velocity(t+1) = control(1); rotation_rate(t+1) = control(2);
     mu(:,t+1) = state;
