@@ -2,7 +2,6 @@
 % measurement: range
 function measurement = get_measurement(state, meas_noise_cov, add_noise)
     % written assuming state is [x_position, y_position, theta]
-    %scaled_meas_noise_cov = meas_noise_cov*norm(state(1:2));
     j = 1;
     for i = 4:2:87
         % range measurements to features
@@ -11,7 +10,10 @@ function measurement = get_measurement(state, meas_noise_cov, add_noise)
     end
     
     if add_noise
-        v_t = mvnrnd(zeros(42,1), meas_noise_cov*eye(42));
+        % this scales the measurement noise by the size of the measurement
+        % aka if we're far from features, measurement has proportional
+        % uncertainty
+        v_t = mvnrnd(zeros(42,1), meas_noise_cov*diag(measurement));
         measurement = measurement' + v_t';
     end
 end

@@ -31,7 +31,7 @@ y_est = wmean(weight,y_sample);
 cov_yy = wcov(weight,y_sample,y_sample)+R;
 cov_xy = wcov(weight,X,y_sample);
 
-x = x + (cov_xy*inv(cov_yy))*(y-y_est);
-sig = sig - (cov_xy*inv(cov_yy))*cov_xy';
+x = x + (cov_xy/(cov_yy))*(y-y_est);
+sig = sig - (cov_xy/(cov_yy))*cov_xy';
 
 end

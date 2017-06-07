@@ -21,11 +21,11 @@ sigma = zeros(state_dim,state_dim,length(time)); % the covariance
 % rotation_rate = zeros(1,length(time)); % rotation control
 
 %test control
-velocity = ones(1,length(time));
+velocity = 0.1*ones(1,length(time));
 rotation_rate = zeros(1,length(time));
 
 % initial filter state + real state
-x(1:3,1) = [0,1,0.2];
+x(1:3,1) = [2,3,0];
 %x and y coordinates of map features
 x(4:end,1) = [5.0067,87.9267,16.9019,87.9267,17.0363,75.7901,5.0067,75.7901,...
     10.7863,87.8003,5.0067,81.8584,11.0551,75.7901,17.1035,81.7320,26.0417,...
@@ -38,9 +38,9 @@ x(4:end,1) = [5.0067,87.9267,16.9019,87.9267,17.0363,75.7901,5.0067,75.7901,...
     29.7724,58.9718,40.0126,50.0336,0.9482,27.9906,1.2010,27.9234,22.9456,36.3239,...
     21.3021,45.3293,14.6018];
 
-mu(1:3,1) = [0,1,0.2];
-mu(4:end,1) = ones(42*2,1);
-sigma(:,:,1) = 1e5*ones(state_dim,state_dim); % very uncertain start state
+mu(1:3,1) = [2,3,0];
+mu(4:end,1) = x(4:end,1)+ (rand()-0.5);
+sigma(:,:,1) = 2*ones(state_dim,state_dim); % very uncertain start state
 
 % noise parameters
 meas_noise_cov = 0.01; % R
@@ -48,7 +48,7 @@ process_noise_cov = zeros(state_dim,state_dim);
 process_noise_cov(1:3,1:3) = 0.1*diag(ones(3,1))*dt^2;
 
 % main simulation loop
-
+handle_1 = figure();
 % for each timestep 
 for t = 1:length(time)-1
 
@@ -65,9 +65,11 @@ for t = 1:length(time)-1
     
     % do active control
     finite_horizon = false;
-    [control] = get_control(state, cov, measurement, [velocity(t), rotation_rate(t)], finite_horizon, dt, process_noise_cov, meas_noise_cov);   
-    velocity(t+1) = control(1); rotation_rate(t+1) = control(2);
+    [control] = get_control(state, cov, measurement, [velocity(t), rotation_rate(t)], finite_horizon, dt, process_noise_cov, meas_noise_cov);        velocity(t+1) = control(1); rotation_rate(t+1) = control(2);
     mu(:,t+1) = state;
     sigma(:,:,t+1) = cov;
- 
+    plot_stuff()
+    pause(dt)
 end
+
+plot_stuff_static()
