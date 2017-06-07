@@ -12,9 +12,10 @@ h2 = plot(mu(1,1:t), mu(2,1:t), 'b--');
 xlabel('x');
 ylabel('y');
 
-for i = 4:2:87
-    h3 = plot(x(i,1:t), x(i+1,1:t), 'x');
+for i = 4:2:11
+    h3 = plot(mu(i,1:t), mu(i+1,1:t), 'x');
+    hold on;
 end
-legend([h1,h2,h3],'True','Estimate','Features');
+%legend([h1,h2,h3],'True','Estimate','Features');
 
 
