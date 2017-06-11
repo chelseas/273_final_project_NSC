@@ -81,8 +81,8 @@ for t = 1:length(time)-1
         add_meas_noise = false;
         [control, objective_val] = get_control(state, cov, measurement, [velocity(t), rotation_rate(t)], finite_horizon, dt, process_noise_cov,...
             meas_noise_cov, add_meas_noise, mindists);
-        velocity(t+1) = control(1); %+ velocity(t+1); 
-        rotation_rate(t+1) = control(2); % + rotation_rate(t+1);
+        velocity(t+1) = control(1) + velocity(t+1); 
+        rotation_rate(t+1) = control(2) + rotation_rate(t+1);
         objective_log(t) = objective_val;
         
         % add tracking piece TO active control
