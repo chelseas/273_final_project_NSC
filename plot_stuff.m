@@ -21,10 +21,15 @@ ylabel('y');
 % plot(x(10,1:t), x(11,1:t), 'cx')
 % plot(mu(10,1:t), mu(11,1:t), 'co')
 
+for j = 1:5
+    h3 = plot(feats(2*j-1), feats(2*j),'kx');
+    text(feats(2*j-1), feats(2*j), sprintf('      Feature %d',j));
+end
+    
 for i = 4:2:13
-   h3 = plot(mu(i,1:t), mu(i+1,1:t), 'x');
+   h4 = plot(mu(i,1:t), mu(i+1,1:t), 'x');
    hold on;
 end
-legend([h1,h2,h3],'True','Estimate','Features');
+legend([h1,h2,h3, h4],'Robot','Robot Estimate','Features','Feature Estimates');
 
 

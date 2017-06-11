@@ -25,13 +25,17 @@ mu = zeros(state_dim,length(time)); % the estimated state
 mindists = 1e4*ones(num_feats,1);
 
 
-%test control
-%velocity = 0.1*ones(1,length(time));
-%rotation_rate = zeros(1,length(time));
+% test control
+% velocity = 0.1*ones(1,length(time));
+velocity = zeros(1, length(time));
+rotation_rate = zeros(1,length(time));
+
+% tracking controller destination
+x_des = [50,50, -90*pi/180];
 
 %niveta control
-velocity = 5*ones(1,length(time));
-rotation_rate = sin(time);
+%velocity = 5*ones(1,length(time));
+%rotation_rate = sin(time);
 
 
 % initial filter state + real state
@@ -43,7 +47,7 @@ mu(1:3,1) = [2,3,0];
 %mu(4:end,1) = x(4:end,1)+ (rand()-0.5);.
 mu(4:end,1) = x(4:end,1);
 %sigma(:,:,1) = 2*ones(state_dim,state_dim); % very uncertain start state
-sigma(:,:,1) = 2*eye(state_dim);
+sigma(:,:,1) = 2*eye(state_dim) + .2*rand(state_dim);
 
 objective_log = zeros(1, length(time));
 
@@ -55,7 +59,7 @@ process_noise_cov(1:3,1:3) = 0.1*eye(3)*dt^2;
 rng('default');
 
 % main simulation loop
-handle_1 = figure();
+%handle_1 = figure();
 active_control = false;
 % for each timestep 
 for t = 1:length(time)-1
@@ -77,18 +81,22 @@ for t = 1:length(time)-1
         add_meas_noise = false;
         [control, objective_val] = get_control(state, cov, measurement, [velocity(t), rotation_rate(t)], finite_horizon, dt, process_noise_cov,...
             meas_noise_cov, add_meas_noise, mindists);
-        velocity(t+1) = control(1) + velocity(t+1); rotation_rate(t+1) = control(2) + rotation_rate(t+1);
+        velocity(t+1) = control(1); %+ velocity(t+1); 
+        rotation_rate(t+1) = control(2); % + rotation_rate(t+1);
         objective_log(t) = objective_val;
-    %else
-    %    u = baseline_control(dt, t, t_max, time, state(1:2));
-    %    velocity(t+1) = u(1);
-    %    control(t+1) = u(2);
+        
+        % add tracking piece TO active control
+    else
+        % first test tracking alone
+        control = path_follow(state, x_des, [velocity(t); rotation_rate(t)]);
+        velocity(t+1) = control(1); rotation_rate(t+1) = control(2);
     end
     
     mu(:,t+1) = state;
     sigma(:,:,t+1) = cov;
-    plot_stuff();
+    %plot_stuff();
     %pause(dt);
 end
-%plot_stuff_static()
 
+save2gif()
+plot_stuff_static()
