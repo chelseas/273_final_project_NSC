@@ -8,8 +8,8 @@ if ~finite_horizon
     options = optimset('MaxFunEvals',100, 'Display', 'iter', 'TolX', 1e-15, 'TolF', 1e-15);
     u_best = fminsearch(objective, u, options);
     % saturate
-    u_best(1) = max( min( u_best(1), 10), -10); % linear velocity
-    u_best(2) = max( min( u_best(2), .2), -0.2); % angular velocity
+    %u_best(1) = max( min( u_best(1), 10), -10); % linear velocity
+    %u_best(2) = max( min( u_best(2), .2), -0.2); % angular velocity
 end
 
     function [objective] = objective_function(u)
