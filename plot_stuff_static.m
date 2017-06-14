@@ -49,6 +49,7 @@ for i = 4:state_dim
      plot(time, x(i,:),'k-'); hold on;
      plot(time, mu(i,:), 'b--');
      title(sprintf('Feature %d %c Tracking', ind, loc));
+     ylim([x(i,end)-50 x(i,end)+50])
      hold on;
      xlabel('time')
      ylabel('distance')
