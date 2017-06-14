@@ -39,13 +39,21 @@ r_pos = x_hat(1:2);
 % first update feature visited list
 % if we haven't visited the first unvisited feature, head towards it
 
-ind = find(feat_checks,1); % index of first unvisited feature.
-feat_vec = x_hat(2*ind-1+3:2*ind+3);
-if norm(feat_vec-r_pos) < 1
-    feat_checks(ind) = 0; % mark need to visit = false
-    feat_target = x_hat(2*ind+1+3:2*ind+2+3);
+if feat_checks(end) == 0 % only true if we've visited all features
+    feat_target = [0;0];
 else
-    feat_target = feat_vec;
+    ind = find(feat_checks,1); % index of first unvisited feature.
+    feat_vec = x_hat(2*ind-1+3:2*ind+3); % first unvisited feat
+    if norm(feat_vec-r_pos) < 1 % if we're close to this feature
+        feat_checks(ind) = 0; % mark need to visit = false
+        if feat_checks(end) == 0 % if all features have NOW been visited
+            feat_target = [0;0]; % go home
+        else % if there are more features to visit, visit them
+            feat_target = x_hat(2*ind+1+3:2*ind+2+3);
+        end
+    else % if we're not close to the next feature, head towards it
+        feat_target = feat_vec;
+    end
 end
 
 [vel, omega] = go_to_feat(feat_target);

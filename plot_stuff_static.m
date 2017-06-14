@@ -35,15 +35,7 @@ for i = 4:state_dim
          loc = 'y';
          ind = j-1;   
      end
-     if i <=7 || i == 10 || i == 13
-         ylim([60, 80]);
-     elseif i == 8
-         ylim([80,100]);
-     elseif i == 9
-         ylim([0,40]);
-     end
-     
-         
+      
      %true_meas = sqrt( sum( (x(i:i+1,:) - x(1:2,:)).^2, 1) );
      %est_meas = sqrt( sum( (mu(i:i+1,:) - mu(1:2,:)).^2, 1) );
      plot(time, x(i,:),'k-'); hold on;
