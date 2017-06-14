@@ -8,7 +8,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 clear all; close all;
 % init sim parameters
-t_max = 20;
+t_max = 60;
 dt = 0.01;
 time = 0:dt:t_max;
 
@@ -79,7 +79,7 @@ for t = 1:length(time)-1
     
     % do active control
     if active_control
-        finite_horizon = true;
+        finite_horizon = false;
         add_meas_noise = false;
         [control, objective_val] = get_control(state, cov, measurement, [velocity(t), rotation_rate(t)], finite_horizon, dt, process_noise_cov,...
             meas_noise_cov, add_meas_noise, mindists);
