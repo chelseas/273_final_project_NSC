@@ -8,7 +8,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 clear all; close all;
 % init sim parameters
-t_max = 60;
+t_max = 50;
 dt = 0.01;
 time = 0:dt:t_max;
 
@@ -93,8 +93,10 @@ for t = 1:length(time)-1
     sigma(:,:,t+1) = cov;
     %pause(.000001);
     %delete([h1,h2,h3,h4,h5,h6]);
+    plot_stuff()
 end
 
-plot_stuff();
-save2gif()
+
+pause;
+%save2gif()
 plot_stuff_static()
