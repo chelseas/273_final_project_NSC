@@ -11,6 +11,9 @@ function [next_state] = propogate_dynamics(prev_state, velocity, rotation_rate, 
     num_feats = (length(prev_state) - 3)/2;
     if add_noise
         wt = mvnrnd(zeros(3+num_feats*2,1),noise_cov);
+        if wt(3) > 10*pi/180
+            fprintf('big noise!')
+        end
         next_state = next_state + wt';
     end                         
 end

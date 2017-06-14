@@ -3,6 +3,8 @@
 % plot path of robot
 
 h1 = plot(x(1,1:t), x(2,1:t),'k-'); hold on;
+h5 = plot(mu(1,t), mu(2,t), 'o', 'MarkerSize', 15, 'LineWidth', 3);
+h6 = plot([mu(1,t), 50*cos(mu(3,t))+mu(1,t)], [mu(2,t), 50*sin(mu(3,t)) + mu(2,t)], 'LineWidth', 3);
 title('Path of robot');
 h2 = plot(mu(1,1:t), mu(2,1:t), 'b--');
 %ellipse_pts = get_error_ellipse(mu(1:2,:),sigma(1:2,1:2,:));
