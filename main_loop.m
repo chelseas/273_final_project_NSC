@@ -8,7 +8,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 clear all; close all;
 % init sim parameters
-t_max = 10;
+t_max = 20;
 dt = 0.01;
 time = 0:dt:t_max;
 
@@ -39,8 +39,11 @@ objective_log = zeros(1, length(time));
 
 % noise parameters
 meas_noise_cov = 0.01*eye(num_feats); % R
+meas_noise_cov(3,3) = 0; % theta noise should be much smaller
 process_noise_cov = zeros(state_dim); % Q
 process_noise_cov(1:3,1:3) = 0.1*eye(3)*dt^2;
+process_noise_cov(3,3) = 0;
+
 
 rng('default');
 
@@ -48,7 +51,7 @@ feat_checks = ones(1,5);
 
 % main simulation loop
 
-active_control = false;
+active_control = true;
 % for each timestep 
 for t = 1:length(time)-1
     
@@ -63,29 +66,38 @@ for t = 1:length(time)-1
     [state, cov] = get_estimate(mu(:,t), sigma(:,:,t), measurement, velocity(t), rotation_rate(t), dt, process_noise_cov, meas_noise_cov);
     mindists = get_min_distances(measurement, mindists);
     
+    if (state(3) > 2*pi) || (state(3) < 0)
+        state(3) = mod(state(3), 2*pi);
+        fprintf('Wrapped angle\n');
+    %elseif state(3) < 0
+    %    state(3) = mod(state(3), -2*pi);
+    %    fprintf('Wrapped angle');
+    end
+    
+   [u, feat_checks] = baseline_control(state, feat_checks);
+    
     % do active control
     if active_control
         finite_horizon = true;
         add_meas_noise = false;
         [control, objective_val] = get_control(state, cov, measurement, [velocity(t), rotation_rate(t)], finite_horizon, dt, process_noise_cov,...
             meas_noise_cov, add_meas_noise, mindists);
-        velocity(t+1) = control(1) + velocity(t+1);
-        rotation_rate(t+1) = control(2) + rotation_rate(t+1);
+        velocity(t+1) = mean(control(1) + u(1));
+        rotation_rate(t+1) = mean(control(2) + u(2));
         objective_log(t) = objective_val;
         
         % add tracking piece TO active control
     else
         % first test tracking alone
-        [u, feat_checks] = baseline_control(state, feat_checks);
         velocity(t+1) = u(1); rotation_rate(t+1) = u(2);
     end
     
     mu(:,t+1) = state;
     sigma(:,:,t+1) = cov;
-    plot_stuff();
-    pause(.0001);
-    delete([h5,h6]);
+    %pause(.000001);
+    %delete([h1,h2,h3,h4,h5,h6]);
 end
 
+plot_stuff();
 save2gif()
 plot_stuff_static()

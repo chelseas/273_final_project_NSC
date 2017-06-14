@@ -34,4 +34,6 @@ for i = 4:2:13
 end
 legend([h1,h2,h3, h4],'Robot','Robot Estimate','Features','Feature Estimates');
 
+axis equal
+
 

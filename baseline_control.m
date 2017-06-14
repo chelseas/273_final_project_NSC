@@ -56,25 +56,28 @@ u = saturate(u);
 function [vel, omega] = go_to_feat(feat_pos)
     ang = get_angle_to_feat(r_pos, feat_pos);
     ang_dif = robot_heading - ang;
+    ang_dif = ang_dif*180/pi;
+    %fprintf('Robot angle to x: %.2f  ', robot_heading*180/pi)
+    %fprintf('Feature heading: %.2f \n', ang*180/pi)
+    %fprintf('Robot angle - angle to feat: %.3f\n', ang_dif);
     % if not pointed in direction of feature
-    if ((ang_dif > 0.5236) && (ang_dif < pi))
-        % command max angular velocity
-        % when close, turn more slowly
-        omega = -1*cos(.5*(abs(ang_dif)+3*pi));
+    if ( ((ang_dif > 270) && (ang_dif < 330)) || ((ang_dif < -30) && (ang_dif > -180) ))
+        omega = 20;
         vel = 0;
-    elseif ang_dif < -0.5236
-        omega = 1*cos(.5*(abs(ang_dif)+3*pi));
+    elseif ( ((ang_dif > 30) && (ang_dif < 180) ) || ( (ang_dif < -180) && (ang_dif > -330) ) )
+        omega = -20;
         vel = 0;
-    else % head to target
+    else
+        vel = 10;
         omega = 0;
-        vel = 50;
     end
+    % cos(.5*(abs(ang_dif)+3*pi))
 end
 
     function ang = get_angle_to_feat(r,f)
         dif_vec = f-r;
         ang = atan2( dif_vec(2), dif_vec(1));
-        ang = mod(ang, pi);
+        ang = mod(ang, 2*pi);
     end
 
 end
