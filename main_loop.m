@@ -50,6 +50,7 @@ rng('default');
 feat_checks = ones(1,5);
 
 % main simulation loop
+%handle_1 = figure();
 
 active_control = true;
 % for each timestep 
