@@ -67,13 +67,9 @@ for t = 1:length(time)-1
     [state, cov] = get_estimate(mu(:,t), sigma(:,:,t), measurement, velocity(t), rotation_rate(t), dt, process_noise_cov, meas_noise_cov);
     mindists = get_min_distances(measurement, mindists);
     
-    if (state(3) > 2*pi) || (state(3) < 0)
-        state(3) = mod(state(3), 2*pi);
-        fprintf('Wrapped angle\n');
-    %elseif state(3) < 0
-    %    state(3) = mod(state(3), -2*pi);
-    %    fprintf('Wrapped angle');
-    end
+    % wrap angles to range [0...360]
+    state(3) = cap_state(state(3));
+    x(3,t+1) = cap_state(x(3,t+1));
     
    [u, feat_checks] = baseline_control(state, feat_checks);
     
