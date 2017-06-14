@@ -13,7 +13,7 @@ end
 options = optimset('MaxFunEvals',50, 'TolX', 1e-5, 'TolF', 1e-5);
 u_best = fminsearch(objective, u, options);
 u_best = saturate(u_best);
-objective_val = objective_function(u_best);
+objective_val = objective(u_best);
 
 
 

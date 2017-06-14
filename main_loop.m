@@ -19,34 +19,20 @@ num_feats = length(feats)/2;
 state_dim = 3 + (num_feats*2); 
 x = zeros(state_dim,length(time)); % the state
 mu = zeros(state_dim,length(time)); % the estimated state
-%sigma = zeros(state_dim,state_dim,length(time)); % the covariance
-% velocity = zeros(1,length(time)); % velocity control
-% rotation_rate = zeros(1,length(time)); % rotation control
+sigma = zeros(state_dim,state_dim,length(time)); % the covariance
 mindists = 1e4*ones(num_feats,1);
 
 
 % test control
-% velocity = 0.1*ones(1,length(time));
-velocity = zeros(1, length(time));
+velocity = zeros(1,length(time));
 rotation_rate = zeros(1,length(time));
-
-% tracking controller destination
-x_des = [50,50, -90*pi/180];
-
-%niveta control
-%velocity = 5*ones(1,length(time));
-%rotation_rate = sin(time);
-
 
 % initial filter state + real state
 x(1:3,1) = [2,3,0];
 %x and y coordinates of map features
 x(4:end,1) = feats;
-
 mu(1:3,1) = [2,3,0];
-%mu(4:end,1) = x(4:end,1)+ (rand()-0.5);.
 mu(4:end,1) = x(4:end,1);
-%sigma(:,:,1) = 2*ones(state_dim,state_dim); % very uncertain start state
 sigma(:,:,1) = 2*eye(state_dim) + .2*rand(state_dim);
 
 objective_log = zeros(1, length(time));
@@ -58,8 +44,10 @@ process_noise_cov(1:3,1:3) = 0.1*eye(3)*dt^2;
 
 rng('default');
 
+feat_checks = ones(1,5);
+
 % main simulation loop
-%handle_1 = figure();
+
 active_control = false;
 % for each timestep 
 for t = 1:length(time)-1
@@ -77,7 +65,7 @@ for t = 1:length(time)-1
     
     % do active control
     if active_control
-        finite_horizon = false;
+        finite_horizon = true;
         add_meas_noise = false;
         [control, objective_val] = get_control(state, cov, measurement, [velocity(t), rotation_rate(t)], finite_horizon, dt, process_noise_cov,...
             meas_noise_cov, add_meas_noise, mindists);
@@ -88,14 +76,15 @@ for t = 1:length(time)-1
         % add tracking piece TO active control
     else
         % first test tracking alone
-        control = path_follow(state, x_des, [velocity(t); rotation_rate(t)]);
-        velocity(t+1) = control(1); rotation_rate(t+1) = control(2);
+        [u, feat_checks] = baseline_control(state, feat_checks);
+        velocity(t+1) = u(1); rotation_rate(t+1) = u(2);
     end
     
     mu(:,t+1) = state;
     sigma(:,:,t+1) = cov;
-    %plot_stuff();
-    %pause(dt);
+    plot_stuff();
+    pause(.0001);
+    delete([h5,h6]);
 end
 
 save2gif()
