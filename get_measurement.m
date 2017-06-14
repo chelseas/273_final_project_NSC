@@ -14,7 +14,7 @@ function measurement = get_measurement(state, meas_noise_cov, add_noise)
         % this scales the measurement noise by the size of the measurement
         % aka if we're far from features, measurement has proportional
         % uncertainty
-        v_t = mvnrnd(zeros((state_dim-3)/2,1), meas_noise_cov);
+        v_t = mvnrnd(zeros((state_dim-3)/2,1), meas_noise_cov*diag(measurement));
         measurement = measurement' + v_t';
     end
 end
