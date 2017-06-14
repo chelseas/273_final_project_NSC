@@ -16,7 +16,7 @@ load('features5.mat');%loads 5 features into the variable feats
 
 % init containers
 num_feats = length(feats)/2;
-state_dim = 3 + (num_feats*2); 
+state_dim = 3 + (num_feats*2);
 x = zeros(state_dim,length(time)); % the state
 mu = zeros(state_dim,length(time)); % the estimated state
 sigma = zeros(state_dim,state_dim,length(time)); % the covariance
@@ -51,7 +51,7 @@ feat_checks = ones(1,5);
 active_control = false;
 % for each timestep 
 for t = 1:length(time)-1
-
+    
     % propogate dynamics
     add_proc_noise = true;
     x(:,t+1) = propogate_dynamics(x(:,t), velocity(t), rotation_rate(t), dt, process_noise_cov, add_proc_noise);
@@ -69,7 +69,7 @@ for t = 1:length(time)-1
         add_meas_noise = false;
         [control, objective_val] = get_control(state, cov, measurement, [velocity(t), rotation_rate(t)], finite_horizon, dt, process_noise_cov,...
             meas_noise_cov, add_meas_noise, mindists);
-        velocity(t+1) = control(1) + velocity(t+1); 
+        velocity(t+1) = control(1) + velocity(t+1);
         rotation_rate(t+1) = control(2) + rotation_rate(t+1);
         objective_log(t) = objective_val;
         
