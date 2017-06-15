@@ -8,7 +8,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 clear all; close all;
 % init sim parameters
-t_max = 50;
+t_max = 30;
 dt = 0.01;
 time = 0:dt:t_max;
 
