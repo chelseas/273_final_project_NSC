@@ -52,7 +52,7 @@ feat_checks = ones(1,5);
 % main simulation loop
 %handle_1 = figure();
 
-active_control = false;
+active_control = true;
 % for each timestep 
 for t = 1:length(time)-1
     
@@ -93,10 +93,10 @@ for t = 1:length(time)-1
     sigma(:,:,t+1) = cov;
     %pause(.000001);
     %delete([h1,h2,h3,h4,h5,h6]);
-    plot_stuff()
+    
 end
 
-
+plot_stuff()
 pause;
 %save2gif()
 plot_stuff_static()
